@@ -1,14 +1,30 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
 plugins {
     id("org.springframework.boot") version "2.7.17"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
+    id("com.google.cloud.tools.jib") version "3.2.0"
+}
+
+jib {
+    from {
+        image = "openjdk:17-jdk"
+        platforms {
+            platform {
+                architecture = "arm64"
+                os = "linux"
+            }
+        }
+    }
+    to {
+        image = "ydh6226/storage-app"
+        tags = setOf("latest")
+    }
+    container {
+        ports = listOf("8080")
+    }
 }
 
 group = "com"

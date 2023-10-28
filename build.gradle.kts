@@ -51,6 +51,7 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.1.4")
         implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.8")
 
         implementation("io.github.microutils:kotlin-logging:2.1.23")
 

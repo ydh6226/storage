@@ -1,20 +1,19 @@
-package com.storage.schedule
+package com.storage.raft.schedule
 
 import com.storage.dto.DataNodeAliveRequest
+import com.storage.raft.service.Node
 import com.storage.service.DataNodeHealthCheckService
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class HealthCheckSchedule(
+    private val node: Node,
     private val dataNodeHealthCheckService: DataNodeHealthCheckService,
 ) {
 
     private val log = KotlinLogging.logger {}
-
-    private val uuid = UUID.randomUUID().toString()
 
     @Scheduled(fixedRate = 10000)
     fun dataNodeAlive() {
@@ -26,8 +25,10 @@ class HealthCheckSchedule(
     }
 
     private fun invoke() {
-        val request = DataNodeAliveRequest(uuid)
+        val request = DataNodeAliveRequest(node.nodeMeta)
         val response = dataNodeHealthCheckService.aliveDataNode(request)
+
         log.info { "${response}" }
+        node.saveNodeMeta(response.nodeMetas)
     }
 }

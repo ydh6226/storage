@@ -1,9 +1,9 @@
 package com.storage.dto
 
 data class DataNodeAliveRequest(
-    val nodeName: String,
+    val nodeMeta: NodeMeta,
 )
 
 data class DataNodeAliveResponse(
-    val nodeNames: List<String>,
+    val nodeMetas: Set<NodeMeta>,
 )

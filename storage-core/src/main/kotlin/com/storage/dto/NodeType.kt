@@ -17,6 +17,6 @@ enum class NodeType {
 
     fun promote(): NodeType {
         check(this == CANDIDATE) { "${this} 상태는 promote 불가능" }
-        return CANDIDATE
+        return LEADER
     }
 }

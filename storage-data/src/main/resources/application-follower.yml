@@ -8,5 +8,5 @@ spring:
 node:
   host: localhost
   electionTimeout:
-    minMs: 150
-    maxMs: 300
+    minMs: 300000
+    maxMs: 400000

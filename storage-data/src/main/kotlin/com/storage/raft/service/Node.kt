@@ -34,6 +34,11 @@ data class Node(
         nodeTerm.clearVoteCount()
     }
 
+    // TODO: 리더 노드 정보 알고있어야 하나? / 뭐 검증해야함?
+    fun voteLeader(candidateNodeMeta: NodeMeta, term: Long) {
+        nodeTerm.voteLeader(candidateNodeMeta, term)
+    }
+
     fun isLeader(): Boolean {
         return nodeType == NodeType.LEADER
     }

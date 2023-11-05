@@ -10,10 +10,10 @@ object NodeGenerator {
         host: String,
         port: Int,
         nodeType: NodeType,
-        electionTimeoutMsMin: Long,
-        electionTimeoutMsMax: Long,
+        electionTimeoutMinMs: Long,
+        electionTimeoutMaxMs: Long,
     ): Node {
-        val electionTimeoutMs = Random.nextLong(electionTimeoutMsMin, electionTimeoutMsMax)
+        val electionTimeoutMs = Random.nextLong(electionTimeoutMinMs, electionTimeoutMaxMs)
 
         return Node(
             nodeMeta = NodeMeta(host, port),

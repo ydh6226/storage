@@ -13,8 +13,8 @@ data class NodeProperty(
 ) {
 
     data class ElectionTimeout(
-        val min: Long,
-        val max: Long,
+        val minMs: Long,
+        val maxMs: Long,
     )
 
 }

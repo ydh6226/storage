@@ -3,6 +3,7 @@ package com.storage.raft.service
 import com.storage.dto.NodeMeta
 import com.storage.raft.action.NodeAdapter
 import com.storage.raft.dto.VoteRequest
+import com.storage.raft.dto.VoteResponse
 import com.storage.raft.repository.NodeRepository
 import mu.KotlinLogging
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ class NodeService(
 
     fun initialize(lastTermChangedAt: LocalDateTime) {
         node.initialize(lastTermChangedAt)
-        log.info { "Node initialized. nodeType: ${node.nodeType}, nodeMeta: ${node.nodeMeta}, lastTermChangedAt: ${lastTermChangedAt}" }
+        log.info { "Node initialized. nodeType: ${node.nodeType}, nodeMeta: ${node.nodeMeta}, electionTimeoutMs: ${node.nodeTerm.electionTimeoutMs}, lastTermChangedAt: ${lastTermChangedAt}" }
     }
 
     fun heartbeat() {
@@ -62,6 +63,16 @@ class NodeService(
 
     private fun getQuorum(): Int {
         return getOtherNodeMetas().size / 2 + 1
+    }
+
+    fun voteLeader(candidateNodeMeta: NodeMeta, term: Long): VoteResponse {
+        return try {
+            node.voteLeader(candidateNodeMeta, term)
+            VoteResponse.success(node.nodeMeta, node.nodeTerm.term)
+        } catch (e: Exception) {
+            log.info { "vote leader fail. ${e.message}" }
+            VoteResponse.fail(node.nodeMeta, node.nodeTerm.term, e.message)
+        }
     }
 
     private fun getOtherNodeMetas(): Set<NodeMeta> {

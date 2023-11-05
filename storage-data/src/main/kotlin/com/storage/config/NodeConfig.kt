@@ -25,8 +25,8 @@ class NodeConfig(
             host = nodeProperty.host,
             port = port,
             nodeType = nodeProperty.nodeType,
-            electionTimeoutMsMin = nodeProperty.electionTimeout.min,
-            electionTimeoutMsMax = nodeProperty.electionTimeout.max,
+            electionTimeoutMinMs = nodeProperty.electionTimeout.minMs,
+            electionTimeoutMaxMs = nodeProperty.electionTimeout.maxMs,
         )
 
         return NodeService(

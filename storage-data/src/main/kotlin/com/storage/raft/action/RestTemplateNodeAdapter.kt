@@ -55,9 +55,11 @@ class RestTemplateNodeAdapter(
     private fun apiCall(nodeMeta: NodeMeta, request: VoteRequest): VoteResponse {
         return try {
             logger.info { "request vote to: ${nodeMeta}" }
-            nodeAdapterRestTemplate.postForEntity("${nodeMeta.url}/api/v1/node-infra/request-vote", request, Unit::class.java)
-            logger.info { "success request vote to: ${nodeMeta}" }
-            VoteResponse.success(nodeMeta)
+            nodeAdapterRestTemplate.postForEntity(
+                "${nodeMeta.url}/api/v1/node-infra/request-vote",
+                request,
+                VoteResponse::class.java
+            ).body!!
         } catch (e: Throwable) {
             logger.info(e) { "request vote failed. nodeMeta: ${nodeMeta}" }
             VoteResponse.fail(nodeMeta)

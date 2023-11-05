@@ -4,6 +4,8 @@ import com.storage.dto.NodeMeta
 import com.storage.raft.domain.NodeType
 import com.storage.raft.dto.HeartBeatResult
 import com.storage.raft.dto.HeartbeatRequest
+import com.storage.raft.dto.VoteRequest
+import com.storage.raft.dto.VoteResponse
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -29,19 +31,40 @@ class RestTemplateNodeAdapter(
         }.joinAll().toSet()
     }
 
-    private fun apiCall(it: NodeMeta, request: HeartbeatRequest): HeartBeatResult {
+    private fun apiCall(nodeMeta: NodeMeta, request: HeartbeatRequest): HeartBeatResult {
         return try {
-            logger.info { "send heartbeat to: ${it}" }
-            nodeAdapterRestTemplate.postForEntity("${it.url}/api/v1/node-infra/heartbeat", request, Unit::class.java)
-            logger.info { "success heartbeat to: ${it}" }
-            HeartBeatResult.success(it)
+            logger.info { "send heartbeat to: ${nodeMeta}" }
+            nodeAdapterRestTemplate.postForEntity("${nodeMeta.url}/api/v1/node-infra/heartbeat", request, Unit::class.java)
+            logger.info { "success heartbeat to: ${nodeMeta}" }
+            HeartBeatResult.success(nodeMeta)
         } catch (e: Throwable) {
-            logger.info(e) { "heartbeat failed. nodeMeta: ${it}" }
-            HeartBeatResult.fail(it)
+            logger.info(e) { "heartbeat failed. nodeMeta: ${nodeMeta}" }
+            HeartBeatResult.fail(nodeMeta)
         }
     }
 
-    private fun List<CompletableFuture<HeartBeatResult>>.joinAll(): List<HeartBeatResult> {
+    override fun requestVote(request: VoteRequest, nodeMetas: Set<NodeMeta>): Set<VoteResponse> {
+        return nodeMetas.map {
+            CompletableFuture.supplyAsync(
+                { apiCall(it, request) },
+                nodeRequestExecutor
+            )
+        }.joinAll().toSet()
+    }
+
+    private fun apiCall(nodeMeta: NodeMeta, request: VoteRequest): VoteResponse {
+        return try {
+            logger.info { "request vote to: ${nodeMeta}" }
+            nodeAdapterRestTemplate.postForEntity("${nodeMeta.url}/api/v1/node-infra/request-vote", request, Unit::class.java)
+            logger.info { "success request vote to: ${nodeMeta}" }
+            VoteResponse.success(nodeMeta)
+        } catch (e: Throwable) {
+            logger.info(e) { "request vote failed. nodeMeta: ${nodeMeta}" }
+            VoteResponse.fail(nodeMeta)
+        }
+    }
+
+    private fun <T> List<CompletableFuture<T>>.joinAll(): List<T> {
         return this.map { it.join() }
     }
 }

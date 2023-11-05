@@ -2,6 +2,7 @@ package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
 import com.storage.raft.action.NodeAdapter
+import com.storage.raft.dto.VoteRequest
 import com.storage.raft.repository.NodeRepository
 import mu.KotlinLogging
 import java.time.LocalDateTime
@@ -15,16 +16,15 @@ class NodeService(
     private val log = KotlinLogging.logger {}
 
     fun initialize(lastTermChangedAt: LocalDateTime) {
-        log.info { "Initialize node. nodeMeta: ${node.nodeMeta} lastTermChangedAt: ${lastTermChangedAt}" }
         node.initialize(lastTermChangedAt)
+        log.info { "Node initialized. nodeType: ${node.nodeType}, nodeMeta: ${node.nodeMeta}, lastTermChangedAt: ${lastTermChangedAt}" }
     }
 
     fun heartbeat() {
         if (!node.isLeader()) {
             return
         }
-        val nodeMetas = nodeRepository.findAllNodeMetas()
-        nodeAdapter.heartbeat(node.nodeType, nodeMetas)
+        nodeAdapter.heartbeat(node.nodeType, getOtherNodeMetas())
     }
 
     fun saveNodeMeta(nodeMetas: Set<NodeMeta>) {
@@ -38,7 +38,13 @@ class NodeService(
         }
         log.info { "Election timeout. Try election. ${node.nodeMeta}" }
         node.tryElection()
-        // TODO: requestVote
+
+        val request = VoteRequest(node.nodeMeta, node.nodeTerm.term)
+        nodeAdapter.requestVote(request, getOtherNodeMetas())
+    }
+
+    private fun getOtherNodeMetas(): Set<NodeMeta> {
+        return nodeRepository.findAllNodeMetas()
     }
 
     fun getNodeMetaData(): NodeMeta {

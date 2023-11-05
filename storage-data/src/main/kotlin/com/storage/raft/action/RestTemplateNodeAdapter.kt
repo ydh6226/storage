@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 @Service
-class RestTemplateNodeActionService(
-    private val nodeActionRestTemplate: RestTemplate,
+class RestTemplateNodeAdapter(
+    private val nodeAdapterRestTemplate: RestTemplate,
     private val nodeRequestExecutor: Executor,
-): NodeActionService() {
+) : NodeAdapter {
 
     private val logger = KotlinLogging.logger {}
 
@@ -32,7 +31,7 @@ class RestTemplateNodeActionService(
     private fun apiCall(it: NodeMeta, request: HeartbeatRequest): HeartBeatResult {
         return try {
             logger.info { "send heartbeat to: ${it}" }
-            nodeActionRestTemplate.postForEntity("${it.url}/api/v1/node-infra/heartbeat", request, Unit::class.java)
+            nodeAdapterRestTemplate.postForEntity("${it.url}/api/v1/node-infra/heartbeat", request, Unit::class.java)
             logger.info { "success heartbeat to: ${it}" }
             HeartBeatResult.success(it)
         } catch (e: Throwable) {

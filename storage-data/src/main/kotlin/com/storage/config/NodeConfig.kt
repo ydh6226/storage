@@ -1,6 +1,6 @@
 package com.storage.config
 
-import com.storage.raft.action.NodeActionService
+import com.storage.raft.action.NodeAdapter
 import com.storage.raft.repository.NodeRepository
 import com.storage.raft.service.Node
 import com.storage.raft.service.NodeCoreGenerator
@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 class NodeConfig(
     @Value("\${server.port}") private val port: Int,
     private val nodeProperty: NodeProperty,
-    private val nodeActionService: NodeActionService,
+    private val nodeAdapter: NodeAdapter,
     private val nodeRepository: NodeRepository,
 ) : ApplicationListener<ApplicationStartedEvent> {
 
@@ -28,7 +28,7 @@ class NodeConfig(
         )
 
         return Node(
-            nodeActionService = nodeActionService,
+            nodeAdapter = nodeAdapter,
             nodeRepository = nodeRepository,
             nodeCore = nodeCore,
         )

@@ -1,13 +1,13 @@
 package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
-import com.storage.raft.action.NodeActionService
+import com.storage.raft.action.NodeAdapter
 import com.storage.raft.repository.NodeRepository
 import mu.KotlinLogging
 import java.time.LocalDateTime
 
 class Node(
-    private val nodeActionService: NodeActionService,
+    private val nodeAdapter: NodeAdapter,
     private val nodeRepository: NodeRepository,
     val nodeCore: NodeCore,
 ) {
@@ -24,7 +24,7 @@ class Node(
             return
         }
         val nodeMetas = nodeRepository.findAllNodeMetas()
-        nodeActionService.heartbeat(nodeCore.nodeType, nodeMetas)
+        nodeAdapter.heartbeat(nodeCore.nodeType, nodeMetas)
     }
 
     fun saveNodeMeta(nodeMetas: Set<NodeMeta>) {

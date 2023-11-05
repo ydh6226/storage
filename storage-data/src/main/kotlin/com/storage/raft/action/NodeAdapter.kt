@@ -4,6 +4,6 @@ import com.storage.dto.NodeMeta
 import com.storage.raft.domain.NodeType
 import com.storage.raft.dto.HeartBeatResult
 
-interface HeartbeatService {
+interface NodeAdapter {
     fun heartbeat(nodeType: NodeType, nodeMetas: Set<NodeMeta>): Set<HeartBeatResult>
 }

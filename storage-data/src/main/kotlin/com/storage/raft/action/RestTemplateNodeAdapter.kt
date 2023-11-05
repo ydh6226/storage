@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
+// TODO: OpenFeign
 @Service
 class RestTemplateNodeAdapter(
     private val nodeAdapterRestTemplate: RestTemplate,

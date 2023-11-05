@@ -32,7 +32,7 @@ class NodeService(
         nodeRepository.saveNodeMetas(others)
     }
 
-    fun maybeTryElection(now: LocalDateTime = LocalDateTime.now()) {
+    fun maybeTryElection(now: LocalDateTime) {
         if (!node.isElectionTimeout(now)) {
             return
         }

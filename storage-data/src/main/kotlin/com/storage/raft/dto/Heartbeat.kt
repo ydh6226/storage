@@ -2,6 +2,10 @@ package com.storage.raft.dto
 
 import com.storage.dto.NodeMeta
 
+data class HeartbeatRequest(
+    val message: String,
+)
+
 data class HeartBeatResult(
     val nodeMeta: NodeMeta,
     val success: Boolean,

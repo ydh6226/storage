@@ -1,6 +1,7 @@
 package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
+import com.storage.dto.NodeType
 import com.storage.raft.action.NodeAdapter
 import com.storage.raft.dto.VoteRequest
 import com.storage.raft.dto.VoteResponse
@@ -81,6 +82,10 @@ class NodeService(
 
     fun getNodeMetaData(): NodeMeta {
         return node.nodeMeta
+    }
+
+    fun getNodeType(): NodeType {
+        return node.nodeType
     }
 
 }

@@ -1,7 +1,7 @@
 package com.storage.raft.action
 
 import com.storage.dto.NodeMeta
-import com.storage.raft.domain.NodeType
+import com.storage.dto.NodeType
 import com.storage.raft.dto.HeartBeatResult
 import com.storage.raft.dto.VoteRequest
 import com.storage.raft.dto.VoteResponse

@@ -1,10 +1,10 @@
 package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
-import com.storage.raft.domain.NodeType
+import com.storage.dto.NodeType
 import java.time.LocalDateTime
 
-// TODO: Lock
+// TODO: Lock, uuid
 data class Node(
     var nodeMeta: NodeMeta,
     var nodeType: NodeType,

@@ -1,4 +1,4 @@
-package com.storage.raft.domain
+package com.storage.dto
 
 enum class NodeType {
     LEADER,

@@ -1,6 +1,6 @@
 package com.storage.config
 
-import com.storage.raft.domain.NodeType
+import com.storage.dto.NodeType
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 

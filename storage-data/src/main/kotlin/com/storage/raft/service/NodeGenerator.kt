@@ -1,7 +1,7 @@
 package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
-import com.storage.raft.domain.NodeType
+import com.storage.dto.NodeType
 import kotlin.random.Random
 
 object NodeGenerator {

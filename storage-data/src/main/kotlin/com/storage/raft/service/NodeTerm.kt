@@ -17,12 +17,7 @@ data class NodeTerm(
         return duration > electionTimeoutMs
     }
 
-    fun tryElection() {
-        increaseTerm()
-        vote() // votes for itself
-    }
-
-    private fun increaseTerm() {
+    fun increaseTerm() {
         // TODO: change lastTermChangedAt
         term++
     }

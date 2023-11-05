@@ -25,7 +25,7 @@ class HealthCheckSchedule(
     }
 
     private fun invoke() {
-        val request = DataNodeAliveRequest(nodeService.node.nodeMeta)
+        val request = DataNodeAliveRequest(nodeService.getNodeMetaData())
         val response = dataNodeHealthCheckService.aliveDataNode(request)
 
         log.info { "${response}" }

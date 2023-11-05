@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 class NodeService(
     private val nodeAdapter: NodeAdapter,
     private val nodeRepository: NodeRepository,
-    val node: Node,
+    private val node: Node,
 ) {
 
     private val log = KotlinLogging.logger {}
@@ -39,6 +39,10 @@ class NodeService(
         log.info { "Election timeout. Try election. ${node.nodeMeta}" }
         node.tryElection()
         // TODO: requestVote
+    }
+
+    fun getNodeMetaData(): NodeMeta {
+        return node.nodeMeta
     }
 
 }

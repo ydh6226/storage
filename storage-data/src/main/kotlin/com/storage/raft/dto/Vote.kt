@@ -10,6 +10,7 @@ data class VoteRequest(
 data class VoteResponse(
     val nodeMeta: NodeMeta,
     val success: Boolean,
+    val term: Long = 0, // TODO: 이거 왜 필요하지?
 ) {
     companion object {
         fun success(nodeMeta: NodeMeta): VoteResponse {

@@ -40,7 +40,28 @@ class NodeService(
         node.tryElection()
 
         val request = VoteRequest(node.nodeMeta, node.nodeTerm.term)
-        nodeAdapter.requestVote(request, getOtherNodeMetas())
+        val responses = nodeAdapter.requestVote(request, getOtherNodeMetas())
+
+        responses.forEach {
+            if (it.success) {
+                node.vote()
+            }
+        }
+
+        val quorum = getQuorum()
+        if (!node.hasMajorityVotes(quorum)) {
+            log.info { "Node not promoted. vote count: ${node.nodeTerm.voteCount}, quorum: ${quorum}" }
+            return
+        }
+
+        log.info { "Node promoted. vote count: ${node.nodeTerm.voteCount}, quorum: ${quorum}" }
+        node.promote()
+
+        // TODO: send Append Entries
+    }
+
+    private fun getQuorum(): Int {
+        return getOtherNodeMetas().size / 2 + 1
     }
 
     private fun getOtherNodeMetas(): Set<NodeMeta> {

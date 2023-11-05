@@ -25,6 +25,15 @@ data class Node(
         nodeTerm.vote()
     }
 
+    fun hasMajorityVotes(quorum: Int): Boolean {
+        return nodeTerm.hasMajorityVotes(quorum)
+    }
+
+    fun promote() {
+        nodeType = nodeType.promote()
+        nodeTerm.clearVoteCount()
+    }
+
     fun isLeader(): Boolean {
         return nodeType == NodeType.LEADER
     }

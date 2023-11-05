@@ -7,11 +7,16 @@ enum class NodeType {
     ;
 
     fun tryElection(): NodeType {
-        check(this == FOLLOWER) { "${this} 상태는 tryElection() 불가능" }
+        check(this == FOLLOWER) { "${this} 상태는 tryElection 불가능" }
         return CANDIDATE
     }
 
     fun checkVoteable() {
-        check(this == CANDIDATE) { "${this} vote 불가능" }
+        check(this == CANDIDATE) { "${this} 상태는 vote 불가능" }
+    }
+
+    fun promote(): NodeType {
+        check(this == CANDIDATE) { "${this} 상태는 promote 불가능" }
+        return CANDIDATE
     }
 }

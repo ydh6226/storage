@@ -21,11 +21,20 @@ data class NodeTerm(
     }
 
     private fun increaseTerm() {
+        // TODO: change lastTermChangedAt
         term++
     }
 
     fun vote() {
         voteCount++
+    }
+
+    fun hasMajorityVotes(quorum: Int): Boolean {
+        return voteCount >= quorum
+    }
+
+    fun clearVoteCount() {
+        voteCount = 0
     }
 
     fun resetLastTermChangedAt(lastTermChangedAt: LocalDateTime) {

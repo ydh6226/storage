@@ -2,37 +2,43 @@ package com.storage.raft.service
 
 import com.storage.dto.NodeMeta
 import com.storage.raft.action.NodeActionService
-import com.storage.raft.domain.NodeType
 import com.storage.raft.repository.NodeRepository
 import mu.KotlinLogging
-import javax.annotation.PostConstruct
+import java.time.LocalDateTime
 
 class Node(
     private val nodeActionService: NodeActionService,
     private val nodeRepository: NodeRepository,
-    private var nodeType: NodeType,
-    val nodeMeta: NodeMeta,
+    val nodeCore: NodeCore,
 ) {
 
     private val log = KotlinLogging.logger {}
 
+    fun initialize(lastTermChangedAt: LocalDateTime) {
+        log.info { "Initialize node. nodeMeta: ${nodeCore.nodeMeta} lastTermChangedAt: ${lastTermChangedAt}" }
+        nodeCore.initialize(lastTermChangedAt)
+    }
+
     fun heartbeat() {
-        if (nodeType != NodeType.LEADER) {
+        if (!nodeCore.isLeader()) {
             return
         }
-
         val nodeMetas = nodeRepository.findAllNodeMetas()
-        nodeActionService.heartbeat(nodeType, nodeMetas)
+        nodeActionService.heartbeat(nodeCore.nodeType, nodeMetas)
     }
 
     fun saveNodeMeta(nodeMetas: Set<NodeMeta>) {
-        val others = nodeMetas.filter { it != nodeMeta }.toSet()
+        val others = nodeMetas.filter { !nodeCore.eqNodeMeta(it) }.toSet()
         nodeRepository.saveNodeMetas(others)
     }
 
-    @PostConstruct
-    fun logNodeMeta() {
-        log.info { "I'm ${nodeType}. ${nodeMeta}" }
+    fun maybeTryElection(now: LocalDateTime = LocalDateTime.now()) {
+        if (!nodeCore.isElectionTimeout(now)) {
+            return
+        }
+        log.info { "Election timeout. Try election. ${nodeCore.nodeMeta}" }
+        nodeCore.tryElection()
+        // TODO: requestVote
     }
 
 }

@@ -2,8 +2,8 @@ package com.storage.config
 
 import com.storage.raft.action.NodeAdapter
 import com.storage.raft.repository.NodeRepository
-import com.storage.raft.service.Node
-import com.storage.raft.service.NodeCoreGenerator
+import com.storage.raft.service.NodeGenerator
+import com.storage.raft.service.NodeService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationStartedEvent
 import org.springframework.context.ApplicationListener
@@ -20,17 +20,19 @@ class NodeConfig(
 ) : ApplicationListener<ApplicationStartedEvent> {
 
     @Bean
-    fun node(): Node {
-        val nodeCore = NodeCoreGenerator.generate(
+    fun node(): NodeService {
+        val node = NodeGenerator.generate(
             host = nodeProperty.host,
             port = port,
             nodeType = nodeProperty.nodeType,
+            electionTimeoutMsMin = nodeProperty.electionTimeout.min,
+            electionTimeoutMsMax = nodeProperty.electionTimeout.max,
         )
 
-        return Node(
+        return NodeService(
             nodeAdapter = nodeAdapter,
             nodeRepository = nodeRepository,
-            nodeCore = nodeCore,
+            node = node,
         )
     }
 

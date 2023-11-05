@@ -1,17 +1,17 @@
 package com.storage.raft.schedule
 
-import com.storage.raft.service.Node
+import com.storage.raft.service.NodeService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
 class NodeSchedule(
-    private val node: Node,
+    private val nodeService: NodeService,
 ) {
 
     @Scheduled(fixedRate = 5000)
     fun heartbeat() {
-        node.heartbeat()
+        nodeService.heartbeat()
     }
 
     /**
@@ -19,6 +19,6 @@ class NodeSchedule(
      */
     @Scheduled(fixedDelay = 5, initialDelay = 150)
     fun maybeTryElection() {
-        node.maybeTryElection()
+        nodeService.maybeTryElection()
     }
 }

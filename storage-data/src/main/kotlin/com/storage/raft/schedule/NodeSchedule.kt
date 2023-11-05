@@ -1,6 +1,7 @@
 package com.storage.raft.schedule
 
 import com.storage.raft.service.NodeService
+import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -10,9 +11,15 @@ class NodeSchedule(
     private val nodeService: NodeService,
 ) {
 
+    private val log = KotlinLogging.logger {}
+
     @Scheduled(fixedRate = 5000)
     fun heartbeat() {
-        nodeService.heartbeat()
+        try {
+            nodeService.heartbeat()
+        } catch (e: Throwable) {
+            log.error(e) { "heartbeat schedule fail" }
+        }
     }
 
     /**
@@ -20,6 +27,10 @@ class NodeSchedule(
      */
     @Scheduled(fixedDelay = 5, initialDelay = 150)
     fun maybeTryElection() {
-        nodeService.maybeTryElection(LocalDateTime.now())
+        try {
+            nodeService.maybeTryElection(LocalDateTime.now())
+        } catch (e: Throwable) {
+            log.error(e) { "maybeTryElection schedule fail" }
+        }
     }
 }

@@ -46,7 +46,7 @@ class NodeService(
 
         responses.forEach {
             if (it.success) {
-                node.vote()
+                node.voted()
             }
         }
 
@@ -69,6 +69,7 @@ class NodeService(
     fun voteLeader(candidateNodeMeta: NodeMeta, term: Long): VoteResponse {
         return try {
             node.voteLeader(candidateNodeMeta, term)
+            log.info { "vote leader to ${candidateNodeMeta}, term: ${term}" }
             VoteResponse.success(node.nodeMeta, node.nodeTerm.term)
         } catch (e: Exception) {
             log.info { "vote leader fail. ${e.message}" }

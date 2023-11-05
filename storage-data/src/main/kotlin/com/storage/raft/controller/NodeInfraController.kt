@@ -26,7 +26,6 @@ class NodeInfraController(
 
     @PostMapping("/request-vote")
     fun heartbeat(@RequestBody request: VoteRequest): VoteResponse {
-        logger.info { "request vote from Leader. ${request}" }
         return nodeService.voteLeader(request.nodeMeta, request.term)
     }
 }

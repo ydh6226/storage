@@ -22,7 +22,7 @@ data class NodeTerm(
         term++
     }
 
-    fun vote() {
+    fun voted() {
         voteCount++
     }
 

@@ -18,12 +18,17 @@ data class Node(
     fun tryElection() {
         nodeType = nodeType.tryElection()
         nodeTerm.increaseTerm()
-        voteLeader(nodeMeta, nodeTerm.term) // votes for itself
+        voteMyself()
     }
 
-    fun vote() {
+    private fun voteMyself() {
+        voted()
+        voteLeader(nodeMeta, nodeTerm.term)
+    }
+
+    fun voted() {
         nodeType.checkVoteable()
-        nodeTerm.vote()
+        nodeTerm.voted()
     }
 
     fun hasMajorityVotes(quorum: Int): Boolean {

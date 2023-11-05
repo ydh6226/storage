@@ -25,6 +25,7 @@ class DataNodeHealthCheckController {
     fun alive(@RequestBody request: DataNodeAliveRequest): DataNodeAliveResponse {
         saveNodeMeta(request.nodeMeta)
         if (request.nodeType == NodeType.LEADER) {
+            log.info { "leader election. ${request.nodeMeta}" }
             leaderNodeMeta = request.nodeMeta
         }
         return DataNodeAliveResponse(nodeMetaToCreatedAt.keys)

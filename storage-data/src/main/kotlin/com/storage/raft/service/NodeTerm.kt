@@ -17,9 +17,19 @@ data class NodeTerm(
         return duration > electionTimeoutMs
     }
 
-    fun increaseTerm() {
+    fun tryElection(nodeMeta: NodeMeta) {
+        increaseTerm()
+        voteMyself(nodeMeta)
+    }
+
+    private fun increaseTerm() {
         // TODO: change lastTermChangedAt
         term++
+    }
+
+    private fun voteMyself(nodeMeta: NodeMeta) {
+        voted()
+        voteLeader(nodeMeta, term)
     }
 
     fun voted() {

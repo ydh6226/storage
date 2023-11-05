@@ -24,7 +24,7 @@ class DataNodeHealthCheckController {
     @PostMapping("/data-node/alive")
     fun alive(@RequestBody request: DataNodeAliveRequest): DataNodeAliveResponse {
         saveNodeMeta(request.nodeMeta)
-        if (request.nodeType == NodeType.LEADER) {
+        if (request.nodeType == NodeType.LEADER && leaderNodeMeta != request.nodeMeta) {
             log.info { "leader election. ${request.nodeMeta}" }
             leaderNodeMeta = request.nodeMeta
         }
@@ -32,7 +32,9 @@ class DataNodeHealthCheckController {
     }
 
     private fun saveNodeMeta(nodeMeta: NodeMeta) {
-        log.info { "데이터 노드 등록 ${nodeMeta}" }
+        if (!nodeMetaToCreatedAt.containsKey(nodeMeta)) {
+            log.info { "데이터 노드 등록 ${nodeMeta}" }
+        }
         nodeMetaToCreatedAt[nodeMeta] = LocalDateTime.now()
     }
 

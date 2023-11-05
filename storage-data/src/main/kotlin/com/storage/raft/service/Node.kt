@@ -17,13 +17,7 @@ data class Node(
 
     fun tryElection() {
         nodeType = nodeType.tryElection()
-        nodeTerm.increaseTerm()
-        voteMyself()
-    }
-
-    private fun voteMyself() {
-        voted()
-        voteLeader(nodeMeta, nodeTerm.term)
+        nodeTerm.tryElection(nodeMeta)
     }
 
     fun voted() {
